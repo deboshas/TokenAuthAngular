@@ -1,6 +1,6 @@
 import { AuthService } from './../services/auth.service';
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'login',
@@ -12,14 +12,19 @@ export class LoginComponent {
 
   constructor(
     private router: Router,
-    private authService: AuthService) { }
+    private authService: AuthService,
+    private activateRoute: ActivatedRoute) {
+
+
+  }
 
   signIn(credentials) {
 
     this.authService.login(credentials)
       .subscribe(returnval => {
         if (returnval === true) {
-          this.router.navigate(['/home']);
+          let returnUrl = this.activateRoute.snapshot.queryParamMap.get('returnUrl');
+          this.router.navigate([returnUrl || '/home']);
         }
 
         else {

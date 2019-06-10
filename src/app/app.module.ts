@@ -15,6 +15,8 @@ import { NoAccessComponent } from './no-access/no-access.component';
 import { AuthService } from './services/auth.service';
 import { JwtModule } from '@auth0/angular-jwt';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { AuthGuard } from './auth-guard.service';
+import { AdminAuthguard } from './admin/authguard.service';
 
 
 @NgModule({
@@ -43,7 +45,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
       }
     })
   ],
-  providers: [fakeBackendProvider, AuthService, JwtHelperService],
+  providers: [AdminAuthguard, AuthGuard, fakeBackendProvider, AuthService, JwtHelperService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -7,12 +7,18 @@ import { delay, mergeMap, materialize, dematerialize } from 'rxjs/operators';
 export class FakeBackendInterceptor implements HttpInterceptor {
 
   constructor() { }
-  token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Ik1vc2ggSGFtZWRhbmkiLCJhZG1pbiI6dHJ1ZX0.iy8az1ZDe-_hS8GLDKsQKgPHvWpHl0zkQBqy1QIPOkA';
+  token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Ik1vc2ggSGFtZWRhbmkiLCJhZG1pbiI6dHJ1ZX0.1dm4jAzSnmfPFNKXAz36Iq6I1upjQ3jW1kTfv5cx2XA';
 
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     // array in local storage for registered users
-    let users: any[] = JSON.parse(localStorage.getItem('users')) || [];
+    let employee: any[] = [
+      { name: "deb", title: "tal" },
+      { name: "ritu", title: "chudi" },
+      { name: "sssd", title: "fff" },
+      { name: "fdgf", title: "ghgf" },
+      { name: "gfdhg", title: "jkj" }
+    ]
 
     // wrap in delayed observable to simulate server api call
     return of(null).pipe(mergeMap(() => {
@@ -32,10 +38,10 @@ export class FakeBackendInterceptor implements HttpInterceptor {
       }
 
       // get users
-      if (request.url.endsWith('/users') && request.method === 'GET') {
+      if (request.url.endsWith('api/employees') && request.method === 'GET') {
         // check for fake auth token in header and return users if valid, this security is implemented server side in a real application
-        if (request.headers.get('Authorization') === 'Bearer fake-jwt-token') {
-          return of(new HttpResponse({ status: 200, body: users }));
+        if (request.headers.get('Authorization') === 'Bearer' + this.token) {
+          return of(new HttpResponse({ status: 200, body: employee }));
         } else {
           // return 401 not authorised if token is null or invalid
           return throwError({ error: { message: 'Unauthorised' } });
